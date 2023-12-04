@@ -15,18 +15,22 @@ def cal(MatrixTime, col):
 	for i in range(numRepetitions):
 		stdVal = stdVal + (MatrixTime[i][col][0]-meanVal)*(MatrixTime[i][col][0]-meanVal)
 	stdVal /= numRepetitions
-	stdVal = stdVal**0.5
+	stdVal **= 0.5
 	return meanVal, stdVal
 
 # calculate build time and query time for a library
 def plotTime(execPath, numRepetitions, numDivisions, numPoints):
-	BuildTime = [[0.0 for x in range(numDivisions)] for y in range(numRepetitions)] 
-	QueryTime = [[0.0 for x in range(numDivisions)] for y in range(numRepetitions)] 
+	BuildTime = [[0.0 for _ in range(numDivisions)] for _ in range(numRepetitions)]
+	QueryTime = [[0.0 for _ in range(numDivisions)] for _ in range(numRepetitions)]
 	xaxis = []
 
-	# run the process multiple times 
+	# run the process multiple times
 	for processCount in range(numRepetitions):
-		proc = subprocess.Popen([execPath + ' ' + str(numPoints) + ' ' + str(processCount) ], stdout=subprocess.PIPE, shell=True)
+		proc = subprocess.Popen(
+			[f'{execPath} {str(numPoints)} {str(processCount)}'],
+			stdout=subprocess.PIPE,
+			shell=True,
+		)
 		(out, err) = proc.communicate()
 		List = out.split()
 		for it, item in enumerate(List):
@@ -72,21 +76,65 @@ if __name__ == '__main__':
 
 	fig, ax = plt.subplots()
 	dir_path = os.path.dirname(os.path.realpath(__file__))
-    	dir_path = dir_path + '/../../build/bin/'
-	if(nanoflannFlag):
-		xaxis, nanoflannBuildTimeFinal, nanoflannBuildTimeError, nanoflannQueryTimeFinal, nanoflannQueryTimeError = plotTime(dir_path + './benchmark_nanoflann_random', numRepetitions, numDivisions, numPoints)
+	dir_path = f'{dir_path}/../../build/bin/'
+	if nanoflannFlag:
+		(
+			xaxis,
+			nanoflannBuildTimeFinal,
+			nanoflannBuildTimeError,
+			nanoflannQueryTimeFinal,
+			nanoflannQueryTimeError,
+		) = plotTime(
+			f'{dir_path}./benchmark_nanoflann_random',
+			numRepetitions,
+			numDivisions,
+			numPoints,
+		)
 		plt.plot(xaxis, nanoflannBuildTimeFinal, 'r', label='nanoflann', linewidth=3.0)
 		plt.errorbar(xaxis, nanoflannBuildTimeFinal, color='k', yerr=nanoflannBuildTimeError, fmt='o')
-	if(flannFlag):
-		xaxis, flannBuildTimeFinal, flannBuildTimeError, flannQueryTimeFinal, flannQueryTimeError = plotTime(dir_path + './benchmark_flann_random', numRepetitions, numDivisions, numPoints)
+	if flannFlag:
+		(
+			xaxis,
+			flannBuildTimeFinal,
+			flannBuildTimeError,
+			flannQueryTimeFinal,
+			flannQueryTimeError,
+		) = plotTime(
+			f'{dir_path}./benchmark_flann_random',
+			numRepetitions,
+			numDivisions,
+			numPoints,
+		)
 		plt.plot(xaxis, flannBuildTimeFinal, 'g', label='flann', linewidth=3.0)
 		plt.errorbar(xaxis, flannBuildTimeFinal, color='k', yerr=flannBuildTimeError, fmt='o')
-	if(fastannFlag):
-		xaxis, fastannBuildTimeFinal, fastannBuildTimeError, fastannQueryTimeFinal, fastannQueryTimeError = plotTime(dir_path + './benchmark_fastann_random', numRepetitions, numDivisions, numPoints)
+	if fastannFlag:
+		(
+			xaxis,
+			fastannBuildTimeFinal,
+			fastannBuildTimeError,
+			fastannQueryTimeFinal,
+			fastannQueryTimeError,
+		) = plotTime(
+			f'{dir_path}./benchmark_fastann_random',
+			numRepetitions,
+			numDivisions,
+			numPoints,
+		)
 		plt.plot(xaxis, fastannBuildTimeFinal, 'b', label='fastann', linewidth=3.0)
 		plt.errorbar(xaxis, fastannBuildTimeFinal, color='k', yerr=fastannBuildTimeError, fmt='o')
-	if(libkdtreeFlag):
-		xaxis, libkdtreeBuildTimeFinal, libkdtreeBuildTimeError, libkdtreeQueryTimeFinal, libkdtreeQueryTimeError = plotTime(dir_path + './benchmark_libkdtree_random', numRepetitions, numDivisions, numPoints)
+	if libkdtreeFlag:
+		(
+			xaxis,
+			libkdtreeBuildTimeFinal,
+			libkdtreeBuildTimeError,
+			libkdtreeQueryTimeFinal,
+			libkdtreeQueryTimeError,
+		) = plotTime(
+			f'{dir_path}./benchmark_libkdtree_random',
+			numRepetitions,
+			numDivisions,
+			numPoints,
+		)
 		plt.plot(xaxis, libkdtreeBuildTimeFinal, 'k', label='libkdtree', linewidth=3.0)
 		plt.errorbar(xaxis, libkdtreeBuildTimeFinal, color='k', yerr=libkdtreeBuildTimeError, fmt='o')
 
@@ -123,11 +171,11 @@ if __name__ == '__main__':
 	    label.set_linewidth(10)  # the legend line width
 	plt.show()
 
-	
+
 	# QUERY TIME PLOTS
 
 	fig, ax = plt.subplots()
-	
+
 	if(nanoflannFlag):
 		plt.plot(xaxis, nanoflannQueryTimeFinal, 'r', label='nanoflann', linewidth=3.0)
 		plt.errorbar(xaxis, nanoflannQueryTimeFinal, color='k', yerr=nanoflannQueryTimeError, fmt='o')

@@ -10,14 +10,16 @@ filename2 = ''
 
 def realTests(window, nanoflannFlag, flannFlag, fastannFlag, libkdtreeFlag):
 	libState  = [nanoflannFlag.get(), flannFlag.get(), fastannFlag.get(), libkdtreeFlag.get()]
-	os.system('realTests/./realTests.py ' + filename1 + ' ' + filename2 + ' ' + str(libState[0]) + ' ' + str(libState[1]) + ' ' + str(libState[2]) + ' ' + str(libState[3]))
+	os.system(
+		f'realTests/./realTests.py {filename1} {filename2} {str(libState[0])} {str(libState[1])} {str(libState[2])} {str(libState[3])}'
+	)
 	window.destroy()
 	return
 
 def selectFile(idx, btn):
 	global filename1
 	global filename2
-	dir_path = os.path.dirname(os.path.realpath(__file__)) + '/realTests/dat_avz'
+	dir_path = f'{os.path.dirname(os.path.realpath(__file__))}/realTests/dat_avz'
 	if(idx == 0):
 		filename1 = askopenfilename(initialdir = dir_path)
 		btn.config(text = filename1)
@@ -70,7 +72,9 @@ def randomTests(window, numPoints, nanoflannFlag, flannFlag, fastannFlag, libkdt
 	libState  = [nanoflannFlag.get(), flannFlag.get(), fastannFlag.get(), libkdtreeFlag.get()]
 	numPoints = numPoints.get()
 	# pass parameters as command line arguments
-	os.system('randomTests/./randomTests.py ' + str(numPoints) + ' ' + str(libState[0]) + ' ' + str(libState[1]) + ' ' + str(libState[2]) + ' ' + str(libState[3]))
+	os.system(
+		f'randomTests/./randomTests.py {str(numPoints)} {str(libState[0])} {str(libState[1])} {str(libState[2])} {str(libState[3])}'
+	)
 	# close window
 	window.destroy()
 	return
@@ -128,7 +132,7 @@ if __name__ == '__main__':
 	root.wm_title("Nanoflann Benchmarking Tool")
 	height = 600
 	width  = 250
-	root.geometry('{}x{}'.format(height, width))
+	root.geometry(f'{height}x{width}')
 	root.minsize(height, width)
 	root.maxsize(height*2, width*2)
 	tk.Grid.rowconfigure(root, 0, weight=1)
@@ -136,7 +140,7 @@ if __name__ == '__main__':
 
 	frame=tk.Frame(root)
 	frame.grid(row=0, column=0, sticky=tk.N+tk.S+tk.E+tk.W)
-	
+
 	realLabel = tk.Label(root, text="Real Test: Compare Nanoflann performance with other kd-tree libraries on real dataset.\n Run Real Test and select two files of same object with different pose.\n", height = 5)
 	randomLabel = tk.Label(root, text="Random Test: Compare Nanoflann performance with other kd-tree libraries on random dataset.\n Run Random Test and select parameters to run the test.\n", height = 5)
 	# 2 buttons	
